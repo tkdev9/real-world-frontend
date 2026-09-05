@@ -1,28 +1,32 @@
 
 /**@type {import('@commitlint/types').UserConfig}*/
 
-// JIRA-123:feat
+// JIRA-123:feat:aldsfkj
 
 const config = {
     extends: ['@commitlint/config-conventional'],
+    parserPreset:{
+        parserOpts:{
+            headerPattern: /^(PROJ-\d+):(\w+):(.+)$/,
+            headerCorrespondence: ['jira', 'type', 'subject']
+        }
+    },
     plugins:[
         {
             rules:{
                 'jira-id-check': (parse) => {
-                    const header = parse.header
-
-                    const jiraPattern = /^PROJ-\d+:\s.+/;
+                    const jira = parse.jira
 
 
-                    const isValid = jiraPattern.test(header)
+                    const isValid = Boolean(jira && /^PROJ-\d+$/.test(jira))
 
                     return[
                         isValid,
                         `Commit message should have JIRA ID\n`+
-                        `The correct formate is PROJ-123:feat: commit message.`
+                        `The correct formate is PROJ-123:feat:commit message.`
                     ]
                 }
-            },
+            }
         }
     ],
     rules:{
